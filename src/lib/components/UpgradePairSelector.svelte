@@ -46,10 +46,12 @@
   <div class="space-y-6">
     <!-- Current Level -->
     <div>
-      <label class="block text-white text-sm font-medium mb-2"
-        >Current Level</label
+      <label
+        for="current-level"
+        class="block text-white text-sm font-medium mb-2">Current Level</label
       >
       <select
+        id="current-level"
         bind:value={fromGear}
         class="w-full px-4 py-3 bg-slate-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
       >
@@ -63,10 +65,12 @@
 
     <!-- Target Level -->
     <div>
-      <label class="block text-white text-sm font-medium mb-2"
-        >Target Level</label
+      <label
+        for="target-level"
+        class="block text-white text-sm font-medium mb-2">Target Level</label
       >
       <select
+        id="target-level"
         bind:value={toGear}
         disabled={!fromGear}
         class="w-full px-4 py-3 bg-slate-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -81,8 +85,11 @@
 
     <!-- Quantity -->
     <div>
-      <label class="block text-white text-sm font-medium mb-2">Quantity</label>
+      <label for="quantity" class="block text-white text-sm font-medium mb-2"
+        >Quantity</label
+      >
       <input
+        id="quantity"
         type="number"
         bind:value={quantity}
         min="1"

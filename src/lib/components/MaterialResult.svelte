@@ -10,14 +10,9 @@
   const dispatch = createEventDispatcher();
 
   $: pairCount = upgradePairs.length;
-  $: hasMaterials = Object.keys(totalMaterials).length > 0;
 
   function handleRemovePair(event: CustomEvent<string>) {
     dispatch("removepair", event.detail);
-  }
-
-  function handleClearAll() {
-    dispatch("clearall");
   }
 </script>
 
@@ -27,7 +22,7 @@
     {#if upgradePairs.length > 0}
       <button
         class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors"
-        on:click={handleClearAll}
+        on:click={() => dispatch("clearall")}
       >
         Clear All
       </button>
@@ -38,11 +33,7 @@
     <div class="space-y-6">
       <UpgradePairList {upgradePairs} on:removepair={handleRemovePair} />
 
-      <TotalMaterialsSummary
-        materials={totalMaterials}
-        gearCount={pairCount}
-        {hasMaterials}
-      />
+      <TotalMaterialsSummary materials={totalMaterials} gearCount={pairCount} />
     </div>
   {:else}
     <div class="empty-state text-center py-20 text-gray-400">

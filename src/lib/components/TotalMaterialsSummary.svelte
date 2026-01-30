@@ -3,7 +3,6 @@
 
   export let materials: Record<string, number>;
   export let gearCount: number;
-  export let hasMaterials: boolean = false;
 
   interface MaterialInfo {
     name: string;
