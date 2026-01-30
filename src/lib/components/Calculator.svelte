@@ -28,7 +28,6 @@
   ): Record<string, number> {
     const materials: Record<string, number> = {};
 
-    // Find the index of both gears in the database
     const fromIndex = chiefGearDatabase.findIndex((g) => g.id === fromGear.id);
     const toIndex = chiefGearDatabase.findIndex((g) => g.id === toGear.id);
 
@@ -36,7 +35,6 @@
       return materials;
     }
 
-    // Sum up materials from fromIndex+1 to toIndex (inclusive)
     for (let i = fromIndex + 1; i <= toIndex; i++) {
       const gear = chiefGearDatabase[i];
       if (gear.materials) {
@@ -59,6 +57,19 @@
     },
     {} as Record<string, number>,
   );
+
+  // Calculate total power - fixed to properly read from gear objects
+  $: totalFromPower = upgradePairs.reduce((sum, pair) => {
+    const fromPower = pair.from.powerTotal || 0;
+    return sum + fromPower * pair.quantity;
+  }, 0);
+
+  $: totalToPower = upgradePairs.reduce((sum, pair) => {
+    const toPower = pair.to.powerTotal || 0;
+    return sum + toPower * pair.quantity;
+  }, 0);
+
+  $: totalPowerIncrease = totalToPower - totalFromPower;
 </script>
 
 <div class="calculator-container grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
@@ -70,6 +81,9 @@
     <MaterialResult
       {upgradePairs}
       {totalMaterials}
+      powerIncrease={totalPowerIncrease}
+      fromPower={totalFromPower}
+      toPower={totalToPower}
       on:removepair={handleRemovePair}
       on:clearall={handleClearAll}
     />

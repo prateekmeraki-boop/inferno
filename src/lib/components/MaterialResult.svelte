@@ -6,6 +6,9 @@
 
   export let upgradePairs: UpgradePair[];
   export let totalMaterials: Record<string, number>;
+  export let powerIncrease: number = 0;
+  export let fromPower: number = 0;
+  export let toPower: number = 0;
 
   const dispatch = createEventDispatcher();
 
@@ -33,7 +36,13 @@
     <div class="space-y-6">
       <UpgradePairList {upgradePairs} on:removepair={handleRemovePair} />
 
-      <TotalMaterialsSummary materials={totalMaterials} gearCount={pairCount} />
+      <TotalMaterialsSummary
+        materials={totalMaterials}
+        gearCount={pairCount}
+        {powerIncrease}
+        {fromPower}
+        {toPower}
+      />
     </div>
   {:else}
     <div class="empty-state text-center py-20 text-gray-400">

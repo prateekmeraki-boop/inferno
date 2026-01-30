@@ -1,5 +1,6 @@
 <script lang="ts">
   import Calculator from "$lib/components/Calculator.svelte";
+  import CharmCalculator from "$lib/chief-charms/CharmCalculator.svelte";
 
   let currentPage = "home";
   let navOpen = false;
@@ -13,6 +14,7 @@
       icon: "⚔️",
       gradient: "from-purple-600 to-blue-600",
       page: "calculator",
+      comingSoon: false,
     },
     {
       id: "chief-charm",
@@ -20,7 +22,8 @@
       description: "Calculate charm upgrade materials with precision",
       icon: "🔮",
       gradient: "from-pink-600 to-purple-600",
-      comingSoon: true,
+      page: "charm-calculator", // NEW
+      comingSoon: false, // enabled
     },
     {
       id: "bear-hunt",
@@ -86,19 +89,27 @@
             ⚔️ Chief Gear Calculator
           </button>
         </li>
-        {#each tools.slice(1) as tool, i}
+        <li class="animate-slideIn" style="animation-delay: 0.3s;">
+          <button
+            on:click={() => navigateTo("charm-calculator")}
+            class="text-4xl font-semibold text-white hover:text-blue-400 transition-colors flex items-center justify-center gap-3 mx-auto"
+          >
+            🔮 Chief Charm Calculator
+          </button>
+        </li>
+        {#each tools.slice(2) as tool, i}
           <li
             class="animate-slideIn"
-            style="animation-delay: {0.3 + i * 0.1}s;"
+            style="animation-delay: {0.4 + i * 0.1}s;"
           >
             <span
               class="text-3xl font-semibold text-gray-500 cursor-not-allowed flex items-center justify-center gap-3"
             >
               {tool.icon}
               {tool.title}
-              <span class="text-sm bg-yellow-600 px-3 py-1 rounded-full"
-                >Coming Soon</span
-              >
+              <span class="text-sm bg-yellow-600 px-3 py-1 rounded-full">
+                Coming Soon
+              </span>
             </span>
           </li>
         {/each}
@@ -216,7 +227,8 @@
     <!-- Footer -->
     <footer class="relative z-10 text-center py-12 text-gray-400 text-sm">
       <p class="mb-2">
-        📊 Data extracted from <a
+        📊 Data extracted from
+        <a
           href="https://www.whiteoutsurvival.wiki"
           target="_blank"
           rel="noopener noreferrer"
@@ -228,7 +240,7 @@
     </footer>
   </div>
 {:else if currentPage === "calculator"}
-  <!-- Calculator Page -->
+  <!-- Chief Gear Calculator Page -->
   <main
     class="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900"
   >
@@ -269,12 +281,70 @@
 
       <footer class="text-center mt-12 text-gray-400 text-sm pb-8">
         <p class="mb-2">
-          📊 Data extracted from <a
+          📊 Data extracted from
+          <a
             href="https://www.whiteoutsurvival.wiki/chief-gear/chief-gear/"
             target="_blank"
             rel="noopener noreferrer"
             class="text-blue-400 hover:text-blue-300">Whiteout Survival Wiki</a
           >
+        </p>
+        <p>Built with ♥ using Vite • Svelte • TailwindCSS • TypeScript</p>
+        <p class="text-xs mt-2">Last updated: 1/30/2026</p>
+      </footer>
+    </div>
+  </main>
+{:else if currentPage === "charm-calculator"}
+  <!-- Chief Charm Calculator Page -->
+  <main
+    class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"
+  >
+    <nav class="flex items-center justify-between px-8 py-6">
+      <button
+        on:click={() => navigateTo("home")}
+        class="flex items-center gap-3 hover:opacity-80 transition-opacity"
+      >
+        <span class="text-4xl">🎮</span>
+        <span class="text-xl font-bold text-white">Whiteout Survival</span>
+      </button>
+      <button
+        on:click={toggleNav}
+        class="flex flex-col gap-1.5 p-2 hover:bg-white/10 rounded-lg transition-colors group"
+        aria-label="Open menu"
+      >
+        <span class="w-8 h-0.5 bg-white group-hover:w-10 transition-all"></span>
+        <span class="w-8 h-0.5 bg-white transition-all"></span>
+        <span class="w-8 h-0.5 bg-white group-hover:w-10 transition-all"></span>
+      </button>
+    </nav>
+
+    <div class="container mx-auto py-8 px-4">
+      <header class="text-center mb-8">
+        <h1
+          class="text-5xl font-bold text-white mb-4 flex items center justify-center gap-3 flex-wrap"
+        >
+          <span class="text-6xl">🔮</span>
+          Chief Charm Material Calculator
+        </h1>
+        <p class="text-gray-300 max-w-2xl mx-auto">
+          Calculate Charm Guides, Charm Designs, and Jewel Secrets needed from
+          any charm part to another.
+        </p>
+      </header>
+
+      <CharmCalculator />
+
+      <footer class="text-center mt-12 text-gray-400 text-sm pb-8">
+        <p class="mb-2">
+          📊 Data extracted from
+          <a
+            href="https://www.whiteoutsurvival.wiki/chief-gear/chief-gear/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-blue-400 hover:text-blue-300"
+          >
+            Whiteout Survival Wiki
+          </a>
         </p>
         <p>Built with ♥ using Vite • Svelte • TailwindCSS • TypeScript</p>
         <p class="text-xs mt-2">Last updated: 1/30/2026</p>
