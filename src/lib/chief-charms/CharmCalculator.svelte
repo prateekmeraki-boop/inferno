@@ -19,6 +19,14 @@
   let currentToId = 0;
   let upgradePaths: UpgradePath[] = [];
 
+  // Reactive statement to filter target options
+  $: targetOptions = charmSteps.filter((step) => step.id > currentFromId);
+
+  // Reset target when current changes
+  $: if (currentToId <= currentFromId) {
+    currentToId = 0;
+  }
+
   function addUpgradePath() {
     if (currentToId <= currentFromId) {
       return;
@@ -33,11 +41,8 @@
       let targetLevel: number;
 
       if (step <= 39) {
-        // Steps 1-39: Levels 1-11
         targetLevel = Math.floor((step + 3) / 4) + 1;
       } else {
-        // Steps 40+: Levels 12-16
-        // Step 40 is "Lv 11 - Part 1" but uses Level 12 costs
         targetLevel = Math.floor((step - 40) / 5) + 12;
       }
 
@@ -147,17 +152,23 @@
             >
             <select
               bind:value={currentToId}
-              class="w-full bg-slate-700 text-white rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+              disabled={currentFromId === 0}
+              class="w-full bg-slate-700 text-white rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {#each charmSteps as step}
+              <option value={0}>Select target level...</option>
+              {#each targetOptions as step}
                 <option value={step.id}>
                   {step.label}
                 </option>
               {/each}
             </select>
             <p class="text-slate-400 text-xs mt-2">
-              Target must be higher than current. Levels 1-10 have 4 parts each,
-              levels 11+ have 5 parts each.
+              {#if currentFromId === 0}
+                Please select a current charm part first.
+              {:else}
+                Target must be higher than current. Levels 1-10 have 4 parts
+                each, levels 11+ have 5 parts each.
+              {/if}
             </p>
           </div>
 
@@ -336,7 +347,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="text-3xl font-bold text-white text-right">
+                  <div class="text-3xl font-boldtext-white text-right">
                     {totals.jewels.toLocaleString()}
                   </div>
                 </div>

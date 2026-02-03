@@ -1,6 +1,8 @@
 <script lang="ts">
   import Calculator from "$lib/components/Calculator.svelte";
   import CharmCalculator from "$lib/chief-charms/CharmCalculator.svelte";
+  import BearHuntCalculator from "$lib/bear-hunt/BearHuntCalculator.svelte";
+  import CrazyJoeCalculator from "$lib/crazy-joe/CrazyJoeCalculator.svelte";
 
   let currentPage = "home";
   let navOpen = false;
@@ -22,24 +24,26 @@
       description: "Calculate charm upgrade materials with precision",
       icon: "🔮",
       gradient: "from-pink-600 to-purple-600",
-      page: "charm-calculator", // NEW
-      comingSoon: false, // enabled
+      page: "charm-calculator",
+      comingSoon: false,
     },
     {
       id: "bear-hunt",
-      title: "Bear Hunt Guide",
-      description: "Complete strategies and tips for Bear Hunt events",
+      title: "Bear Hunt Calculator",
+      description: "Calculate optimal troop distribution for Bear Hunt events",
       icon: "🐻",
       gradient: "from-orange-600 to-red-600",
-      comingSoon: true,
+      page: "bear-hunt",
+      comingSoon: false,
     },
     {
       id: "crazy-joe",
-      title: "Crazy Joe Guide",
+      title: "Crazy Joe Calculator",
       description: "Master the Crazy Joe event with detailed guides",
       icon: "🤪",
       gradient: "from-green-600 to-teal-600",
-      comingSoon: true,
+      page: "crazy-joe",
+      comingSoon: false,
     },
   ];
 
@@ -97,22 +101,22 @@
             🔮 Chief Charm Calculator
           </button>
         </li>
-        {#each tools.slice(2) as tool, i}
-          <li
-            class="animate-slideIn"
-            style="animation-delay: {0.4 + i * 0.1}s;"
+        <li class="animate-slideIn" style="animation-delay: 0.4s;">
+          <button
+            on:click={() => navigateTo("bear-hunt")}
+            class="text-4xl font-semibold text-white hover:text-blue-400 transition-colors flex items-center justify-center gap-3 mx-auto"
           >
-            <span
-              class="text-3xl font-semibold text-gray-500 cursor-not-allowed flex items-center justify-center gap-3"
-            >
-              {tool.icon}
-              {tool.title}
-              <span class="text-sm bg-yellow-600 px-3 py-1 rounded-full">
-                Coming Soon
-              </span>
-            </span>
-          </li>
-        {/each}
+            🐻 Bear Hunt Calculator
+          </button>
+        </li>
+        <li class="animate-slideIn" style="animation-delay: 0.5s;">
+          <button
+            on:click={() => navigateTo("crazy-joe")}
+            class="text-4xl font-semibold text-white hover:text-blue-400 transition-colors flex items-center justify-center gap-3 mx-auto"
+          >
+            🤪 Crazy Joe Calculator
+          </button>
+        </li>
       </ul>
     </nav>
   </div>
@@ -321,7 +325,7 @@
     <div class="container mx-auto py-8 px-4">
       <header class="text-center mb-8">
         <h1
-          class="text-5xl font-bold text-white mb-4 flex items center justify-center gap-3 flex-wrap"
+          class="text-5xl font-bold text-white mb-4 flex items-center justify-center gap-3 flex-wrap"
         >
           <span class="text-6xl">🔮</span>
           Chief Charm Material Calculator
@@ -345,6 +349,115 @@
           >
             Whiteout Survival Wiki
           </a>
+        </p>
+        <p>Built with ♥ using Vite • Svelte • TailwindCSS • TypeScript</p>
+        <p class="text-xs mt-2">Last updated: 1/30/2026</p>
+      </footer>
+    </div>
+  </main>
+{:else if currentPage === "bear-hunt"}
+  <!-- Bear Hunt Calculator Page -->
+  <main
+    class="min-h-screen bg-gradient-to-br from-slate-900 via-orange-900 to-slate-900"
+  >
+    <nav class="flex items-center justify-between px-8 py-6">
+      <button
+        on:click={() => navigateTo("home")}
+        class="flex items-center gap-3 hover:opacity-80 transition-opacity"
+      >
+        <span class="text-4xl">🎮</span>
+        <span class="text-xl font-bold text-white">Whiteout Survival</span>
+      </button>
+      <button
+        on:click={toggleNav}
+        class="flex flex-col gap-1.5 p-2 hover:bg-white/10 rounded-lg transition-colors group"
+        aria-label="Open menu"
+      >
+        <span class="w-8 h-0.5 bg-white group-hover:w-10 transition-all"></span>
+        <span class="w-8 h-0.5 bg-white transition-all"></span>
+        <span class="w-8 h-0.5 bg-white group-hover:w-10 transition-all"></span>
+      </button>
+    </nav>
+
+    <div class="container mx-auto py-8 px-4">
+      <header class="text-center mb-8">
+        <h1
+          class="text-5xl font-bold text-white mb-4 flex items-center justify-center gap-3 flex-wrap"
+        >
+          <span class="text-6xl">🐻</span>
+          Bear Hunt Calculator
+        </h1>
+        <p class="text-gray-300 max-w-2xl mx-auto">
+          Calculate optimal troop distribution for Bear Hunt events for
+          Generation 10
+        </p>
+      </header>
+
+      <BearHuntCalculator />
+
+      <footer class="text-center mt-12 text-gray-400 text-sm pb-8">
+        <p class="mb-2">
+          📊 Data extracted from
+          <a
+            href="https://www.whiteoutsurvival.wiki"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-blue-400 hover:text-blue-300">Whiteout Survival Wiki</a
+          >
+        </p>
+        <p>Built with ♥ using Vite • Svelte • TailwindCSS • TypeScript</p>
+        <p class="text-xs mt-2">Last updated: 1/30/2026</p>
+      </footer>
+    </div>
+  </main>
+{:else if currentPage === "crazy-joe"}
+  <!-- Crazy Joe Calculator Page -->
+  <main
+    class="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900"
+  >
+    <nav class="flex items-center justify-between px-8 py-6">
+      <button
+        on:click={() => navigateTo("home")}
+        class="flex items-center gap-3 hover:opacity-80 transition-opacity"
+      >
+        <span class="text-4xl">🎮</span>
+        <span class="text-xl font-bold text-white">Whiteout Survival</span>
+      </button>
+      <button
+        on:click={toggleNav}
+        class="flex flex-col gap-1.5 p-2 hover:bg-white/10 rounded-lg transition-colors group"
+        aria-label="Open menu"
+      >
+        <span class="w-8 h-0.5 bg-white group-hover:w-10 transition-all"></span>
+        <span class="w-8 h-0.5 bg-white transition-all"></span>
+        <span class="w-8 h-0.5 bg-white group-hover:w-10 transition-all"></span>
+      </button>
+    </nav>
+
+    <div class="container mx-auto py-8 px-4">
+      <header class="text-center mb-8">
+        <h1
+          class="text-5xl font-bold text-white mb-4 flex items-center justify-center gap-3 flex-wrap"
+        >
+          <span class="text-6xl">🤪</span>
+          Crazy Joe Calculator
+        </h1>
+        <p class="text-gray-300 max-w-2xl mx-auto">
+          Calculate optimal troop distribution for Crazy Joe events
+        </p>
+      </header>
+
+      <CrazyJoeCalculator />
+
+      <footer class="text-center mt-12 text-gray-400 text-sm pb-8">
+        <p class="mb-2">
+          📊 Data extracted from
+          <a
+            href="https://www.whiteoutsurvival.wiki"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-blue-400 hover:text-blue-300">Whiteout Survival Wiki</a
+          >
         </p>
         <p>Built with ♥ using Vite • Svelte • TailwindCSS • TypeScript</p>
         <p class="text-xs mt-2">Last updated: 1/30/2026</p>

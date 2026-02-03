@@ -1,135 +1,209 @@
 <script lang="ts">
-  import type { ChiefGear } from "$types";
-  import { getAllTiers } from "$data/chiefGearData";
+  import { gearData } from "../lib/gearData";
+  import type { GearItem, UpgradePath } from "../lib/types";
 
-  export let chiefGearDatabase: ChiefGear[] = [];
-  export let addGear: (gear: ChiefGear) => void;
+  export let upgradePaths: UpgradePath[] = [];
 
-  let selectedTier: string = "";
-  let searchQuery: string = "";
+  let currentGear: GearItem | null = null;
+  let targetGear: GearItem | null = null;
+  let quantity: number = 1;
 
-  const allTiers = getAllTiers();
+  // Reactive statement to filter target options
+  $: targetGearOptions = currentGear
+    ? gearData.filter(
+        (g) => g.level > currentGear!.level && g.rarity === currentGear!.rarity,
+      )
+    : [];
 
-  $: filteredGears = chiefGearDatabase.filter((gear) => {
-    const tierMatch = !selectedTier || gear.tier === selectedTier;
-    const searchMatch =
-      !searchQuery ||
-      gear.tier.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      gear.bonus.toLowerCase().includes(searchQuery.toLowerCase());
-    return tierMatch && searchMatch;
-  });
-
-  function getTierColor(tierColor: string): string {
-    const colors: Record<string, string> = {
-      green: "bg-green-600",
-      blue: "bg-blue-600",
-      purple: "bg-purple-600",
-      gold: "bg-yellow-500",
-      red: "bg-red-600",
-    };
-    return colors[tierColor] || "bg-gray-600";
+  // Reset target when current changes
+  $: if (currentGear && targetGear) {
+    if (
+      targetGear.level <= currentGear.level ||
+      targetGear.rarity !== currentGear.rarity
+    ) {
+      targetGear = null;
+    }
   }
 
-  function getTierTextColor(tierColor: string): string {
-    const colors: Record<string, string> = {
-      green: "text-green-300",
-      blue: "text-blue-300",
-      purple: "text-purple-300",
-      gold: "text-yellow-300",
-      red: "text-red-300",
+  function addUpgradePath() {
+    if (!currentGear || !targetGear) return;
+
+    const newPath: UpgradePath = {
+      id: Date.now(),
+      current: currentGear,
+      target: targetGear,
+      quantity,
     };
-    return colors[tierColor] || "text-gray-300";
+
+    upgradePaths = [...upgradePaths, newPath];
+
+    // Reset
+    currentGear = null;
+    targetGear = null;
+    quantity = 1;
   }
+
+  function removeUpgradePath(id: number) {
+    upgradePaths = upgradePaths.filter((path) => path.id !== id);
+  }
+
+  function clearAll() {
+    upgradePaths = [];
+  }
+
+  $: currentGearOptions = gearData;
 </script>
 
-<div class="bg-gray-800 rounded-lg p-6 space-y-4 h-full">
-  <h2 class="text-2xl font-bold text-white mb-4">🎯 Select Gear</h2>
-
-  <!-- Search Box -->
-  <div>
-    <label for="search" class="block text-sm font-medium text-gray-300 mb-2"
-      >Search</label
-    >
-    <input
-      id="search"
-      type="text"
-      bind:value={searchQuery}
-      placeholder="Search gears..."
-      class="w-full px-3 py-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-600"
-    />
-  </div>
-
-  <!-- Tier Filter -->
-  <div>
-    <label for="tier" class="block text-sm font-medium text-gray-300 mb-2"
-      >Filter by Tier</label
-    >
-    <select
-      id="tier"
-      bind:value={selectedTier}
-      class="w-full px-3 py-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-600"
-    >
-      <option value="">All Tiers ({chiefGearDatabase.length})</option>
-      {#each allTiers as tier}
-        {@const count = chiefGearDatabase.filter((g) => g.tier === tier).length}
-        <option value={tier}>{tier} ({count})</option>
-      {/each}
-    </select>
-  </div>
-
-  <!-- Gears List -->
-  <div class="space-y-2 max-h-96 overflow-y-auto">
-    {#if filteredGears.length === 0}
-      <div class="text-center py-8 text-gray-400">
-        <p>No gears found</p>
+<div class="space-y-6">
+  <!-- Selector Section -->
+  <div class="bg-slate-800 rounded-xl p-6 shadow-xl">
+    <div class="flex items-center gap-3 mb-6">
+      <div
+        class="w-10 h-10 bg-gradient-to-br from-red-500 to-orange-500 rounded-lg flex items-center justify-center"
+      >
+        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"
+          />
+        </svg>
       </div>
-    {:else}
-      {#each filteredGears as gear (gear.id)}
-        <button
-          on:click={() => addGear(gear)}
-          class="w-full text-left p-3 rounded-lg bg-gray-700 hover:bg-gray-600 transition-colors border border-gray-600 hover:border-gray-500"
+      <h2 class="text-2xl font-bold text-white">Select Gear</h2>
+    </div>
+
+    <div class="space-y-4">
+      <!-- Current Level -->
+      <div>
+        <label class="block text-slate-300 text-sm font-medium mb-2"
+          >Current Level</label
         >
-          <div class="flex items-center gap-3">
-            <div
-              class={`w-4 h-4 rounded-full ${getTierColor(gear.tierColor)}`}
-            ></div>
-            <div class="flex-1 min-w-0">
-              <div
-                class={`font-semibold text-sm {getTierTextColor(gear.tierColor)}`}
-              >
-                {gear.tier} ⭐{gear.stars}
-              </div>
-              <div class="text-xs text-gray-400">{gear.bonus}</div>
-            </div>
-            <div class="text-right flex-shrink-0">
-              <div class="text-xs font-medium text-green-400">
-                ⚡ {(gear.powerTotal / 1000).toFixed(1)}K
-              </div>
-            </div>
-          </div>
+        <select
+          bind:value={currentGear}
+          class="w-full bg-slate-700 text-white rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+        >
+          <option value={null}>Select current gear...</option>
+          {#each currentGearOptions as gear}
+            <option value={gear}>
+              {gear.name} ({gear.rarity})
+            </option>
+          {/each}
+        </select>
+      </div>
+
+      <!-- Target Level -->
+      <div>
+        <label class="block text-slate-300 text-sm font-medium mb-2"
+          >Target Level</label
+        >
+        <select
+          bind:value={targetGear}
+          disabled={!currentGear}
+          class="w-full bg-slate-700 text-white rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <option value={null}>
+            {#if !currentGear}
+              Please select current gear first...
+            {:else}
+              Select target gear...
+            {/if}
+          </option>
+          {#each targetGearOptions as gear}
+            <option value={gear}>
+              {gear.name} ({gear.rarity})
+            </option>
+          {/each}
+        </select>
+        <p class="text-slate-400 text-xs mt-2">
+          {#if !currentGear}
+            Please select a current gear level first.
+          {:else if targetGearOptions.length === 0}
+            No higher levels available for this rarity.
+          {:else}
+            Target must be higher than current within the same rarity.
+          {/if}
+        </p>
+      </div>
+
+      <!-- Quantity -->
+      <div>
+        <label class="block text-slate-300 text-sm font-medium mb-2"
+          >Quantity</label
+        >
+        <input
+          type="number"
+          bind:value={quantity}
+          min="1"
+          class="w-full bg-slate-700 text-white rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+        />
+      </div>
+
+      <!-- Add Button -->
+      <button
+        on:click={addUpgradePath}
+        disabled={!currentGear || !targetGear}
+        class="w-full bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 text-white font-semibold py-3 px-6 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-purple-600 disabled:hover:to-purple-500"
+      >
+        Add Upgrade Path
+      </button>
+    </div>
+  </div>
+
+  <!-- Upgrade Paths Display -->
+  {#if upgradePaths.length > 0}
+    <div class="bg-slate-800 rounded-xl p-6 shadow-xl">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-xl font-bold text-white">
+          Upgrade Paths ({upgradePaths.length})
+        </h3>
+        <button
+          on:click={clearAll}
+          class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-all text-sm"
+        >
+          Clear All
         </button>
-      {/each}
-    {/if}
-  </div>
+      </div>
 
-  <div class="text-xs text-gray-500 pt-2 border-t border-gray-700">
-    Showing {filteredGears.length} of {chiefGearDatabase.length} gears
-  </div>
+      <div class="space-y-3">
+        {#each upgradePaths as path}
+          <div
+            class="bg-slate-700/50 rounded-lg p-4 flex items-center justify-between"
+          >
+            <div class="flex-1">
+              <div class="text-sm text-slate-400 mb-1">
+                Quantity: {path.quantity}x
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-white font-medium">{path.current.name}</span>
+                <span class="text-yellow-400">★</span>
+                <svg
+                  class="w-4 h-4 text-slate-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
+                </svg>
+                <span class="text-red-400">★</span>
+                <span class="text-white font-medium">{path.target.name}</span>
+              </div>
+              <div class="text-xs text-slate-400 mt-1">
+                {path.current.power.toLocaleString()} → {path.target.power.toLocaleString()}
+                power
+              </div>
+            </div>
+            <button
+              on:click={() => removeUpgradePath(path.id)}
+              class="ml-4 bg-red-600 hover:bg-red-700 text-white w-8 h-8 rounded-lg flex items-center justify-center transition-all flex-shrink-0"
+            >
+              ✕
+            </button>
+          </div>
+        {/each}
+      </div>
+    </div>
+  {/if}
 </div>
-
-<style>
-  ::-webkit-scrollbar {
-    width: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    background: #374151;
-    border-radius: 10px;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #4b5563;
-    border-radius: 10px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: #6b7280;
-  }
-</style>
