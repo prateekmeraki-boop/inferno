@@ -159,13 +159,14 @@
     <div class="relative z-10 container mx-auto px-6 py-20">
       <div class="text-center mb-20">
         <h1 class="text-7xl font-extrabold text-white mb-6 animate-fadeInUp">
-          Tools & Guides
+          Welcome Inferno Family
         </h1>
         <p
           class="text-2xl text-blue-300 mb-8 animate-fadeInUp"
           style="animation-delay: 0.2s;"
         >
-          Your ultimate companion for Whiteout Survival
+          Dono here. I made this web-app specifically for our Inferno Family.
+          Hope this helps you all in your gaming journey.
         </p>
         <div
           class="flex flex-wrap items-center justify-center gap-4 animate-fadeInUp"
