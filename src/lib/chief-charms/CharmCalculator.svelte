@@ -30,20 +30,17 @@
     let power = 0;
 
     for (let step = currentFromId + 1; step <= currentToId; step++) {
-      // Step 0-3: Costs for reaching Level 1 (parts 1-4)
-      // Step 4-7: Costs for reaching Level 2 (parts 1-4)
-      // Step 20: "Lv 6" - this is the completion of going through level 5
-      // Step 21: "Lv 6 - Part 1" - this should use Level 7 costs
+      let targetLevel: number;
 
-      // The level whose costs we need is: floor(step / 4) + 1
-      // But since "Lv X" displayed is actually at position (X-1)*4 + 3,
-      // we need to figure out which level's materials are needed
+      if (step <= 39) {
+        // Steps 1-39: Levels 1-11
+        targetLevel = Math.floor((step + 3) / 4) + 1;
+      } else {
+        // Steps 40+: Levels 12-16
+        // Step 40 is "Lv 11 - Part 1" but uses Level 12 costs
+        targetLevel = Math.floor((step - 40) / 5) + 12;
+      }
 
-      // Step 21 should use level 7 costs
-      // (21-1)/4 = 5, meaning we've completed 5 levels, so we're working on level 6
-      // But the display shows "Lv 6" at step 20, meaning step 21+ uses level 7
-
-      const targetLevel = Math.floor(step / 4) + 2;
       const partCost = getPerPartCost(targetLevel);
 
       guides += partCost.guides;
@@ -66,7 +63,6 @@
 
     upgradePaths = [...upgradePaths, newPath];
 
-    // Reset
     currentFromId = 0;
     currentToId = 0;
   }
@@ -160,8 +156,8 @@
               {/each}
             </select>
             <p class="text-slate-400 text-xs mt-2">
-              Target must be higher than current. Each level is divided into
-              four equal parts.
+              Target must be higher than current. Levels 1-10 have 4 parts each,
+              levels 11+ have 5 parts each.
             </p>
           </div>
 
@@ -286,26 +282,6 @@
 
               <div class="grid grid-cols-1 gap-3">
                 <div
-                  class="bg-slate-800/70 rounded-lg p-4 border-2 border-yellow-500/50 hover:border-yellow-500 transition-all"
-                >
-                  <div class="flex items-center gap-3 mb-2">
-                    <div
-                      class="w-12 h-12 bg-slate-700 rounded-lg flex items-center justify-center flex-shrink-0"
-                    >
-                      <span class="text-2xl">📦</span>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <div class="text-slate-300 text-sm font-medium">
-                        Charm Guides
-                      </div>
-                    </div>
-                  </div>
-                  <div class="text-3xl font-bold text-white text-right">
-                    {totals.guides.toLocaleString()}
-                  </div>
-                </div>
-
-                <div
                   class="bg-slate-800/70 rounded-lg p-4 border-2 border-orange-500/50 hover:border-orange-500 transition-all"
                 >
                   <div class="flex items-center gap-3 mb-2">
@@ -322,6 +298,26 @@
                   </div>
                   <div class="text-3xl font-bold text-white text-right">
                     {totals.designs.toLocaleString()}
+                  </div>
+                </div>
+
+                <div
+                  class="bg-slate-800/70 rounded-lg p-4 border-2 border-yellow-500/50 hover:border-yellow-500 transition-all"
+                >
+                  <div class="flex items-center gap-3 mb-2">
+                    <div
+                      class="w-12 h-12 bg-slate-700 rounded-lg flex items-center justify-center flex-shrink-0"
+                    >
+                      <span class="text-2xl">📦</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="text-slate-300 text-sm font-medium">
+                        Charm Guides
+                      </div>
+                    </div>
+                  </div>
+                  <div class="text-3xl font-bold text-white text-right">
+                    {totals.guides.toLocaleString()}
                   </div>
                 </div>
 

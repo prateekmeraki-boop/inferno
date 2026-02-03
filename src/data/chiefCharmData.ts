@@ -1,55 +1,78 @@
-// src/data/chiefCharmData.ts
-import type { ChiefCharmLevel, CharmStep } from '../types/chiefCharm';
+export const charmData = {
+  1: { designs: 5, guides: 5, jewels: 0, power: 205700 },
+  2: { designs: 15, guides: 40, jewels: 0, power: 288000 },
+  3: { designs: 40, guides: 60, jewels: 0, power: 370000 },
+  4: { designs: 100, guides: 80, jewels: 0, power: 452000 },
+  5: { designs: 200, guides: 100, jewels: 0, power: 576000 },
+  6: { designs: 300, guides: 120, jewels: 0, power: 700000 },
+  7: { designs: 400, guides: 140, jewels: 0, power: 824000 },
+  8: { designs: 400, guides: 200, jewels: 0, power: 948000 },
+  9: { designs: 400, guides: 300, jewels: 0, power: 1072000 },
+  10: { designs: 420, guides: 420, jewels: 0, power: 1196000 },
+  11: { designs: 420, guides: 560, jewels: 0, power: 1320000 },
+  12: { designs: 450, guides: 580, jewels: 15, power: 1444000 },
+  13: { designs: 450, guides: 580, jewels: 30, power: 1568000 },
+  14: { designs: 500, guides: 600, jewels: 45, power: 1692000 },
+  15: { designs: 500, guides: 600, jewels: 70, power: 1816000 },
+  16: { designs: 550, guides: 650, jewels: 100, power: 1940000 },
+};
 
-export const chiefCharmLevels: ChiefCharmLevel[] = [
-  { level: 1,  guides: 5,   designs: 5,   jewels: 0,   statTotal: 9.0,  power: 205700 },
-  { level: 2,  guides: 40,  designs: 15,  jewels: 0,   statTotal: 12.0, power: 288000 },
-  { level: 3,  guides: 60,  designs: 40,  jewels: 0,   statTotal: 16.0, power: 370000 },
-  { level: 4,  guides: 100, designs: 80,  jewels: 0,   statTotal: 19.0, power: 452000 },
-  { level: 5,  guides: 200, designs: 100, jewels: 0,   statTotal: 25.0, power: 576000 },
-  { level: 6,  guides: 120, designs: 300, jewels: 0,   statTotal: 30.0, power: 700000 },
-  { level: 7,  guides: 140, designs: 400, jewels: 0,   statTotal: 35.0, power: 824000 },
-  { level: 8,  guides: 200, designs: 400, jewels: 0,   statTotal: 40.0, power: 948000 },
-  { level: 9,  guides: 400, designs: 300, jewels: 0,   statTotal: 45.0, power: 1072000 },
-  { level: 10, guides: 420, designs: 420, jewels: 0,   statTotal: 50.0, power: 1196000 },
-  { level: 11, guides: 420, designs: 560, jewels: 0,   statTotal: 55.0, power: 1320000 },
-  { level: 12, guides: 450, designs: 580, jewels: 15,  statTotal: 64.0, power: 1444000 },
-  { level: 13, guides: 450, designs: 580, jewels: 30,  statTotal: 73.0, power: 1568000 },
-  { level: 14, guides: 500, designs: 600, jewels: 45,  statTotal: 82.0, power: 1692000 },
-  { level: 15, guides: 500, designs: 600, jewels: 70,  statTotal: 91.0, power: 1816000 },
-  { level: 16, guides: 550, designs: 650, jewels: 100, statTotal: 100.0, power: 1940000 },
-];
-
-// 64 charm sub-steps (4 per level)
-export const charmSteps: CharmStep[] = [];
-
-for (let level = 1; level <= 16; level++) {
-  for (let part = 1; part <= 4; part++) {
-    const id = (level - 1) * 4 + (part - 1);
-    const isLastPart = part === 4;
-
-    const displayLevel = isLastPart ? level + 1 : level;
-    const label = isLastPart
-      ? `Lv ${displayLevel}`
-      : `Lv ${displayLevel} - Part ${part}`;
-
-    charmSteps.push({
-      id,
-      level,
-      part,
-      label,
-    });
-  }
-}
-
-// 🚨 Make sure this export exists:
 export function getPerPartCost(level: number) {
-  const row = chiefCharmLevels.find((l) => l.level === level);
-  if (!row) throw new Error(`Missing charm level ${level}`);
+  const totalCost = charmData[level as keyof typeof charmData];
+  if (!totalCost) {
+    return { guides: 0, designs: 0, jewels: 0, power: 0 };
+  }
+
+  const divisor = level <= 10 ? 4 : 5;
+
   return {
-    guides: row.guides / 4,
-    designs: row.designs / 4,
-    jewels: row.jewels / 4,
-    power: row.power / 4,
+    guides: totalCost.guides / divisor,
+    designs: totalCost.designs / divisor,
+    jewels: totalCost.jewels / divisor,
+    power: totalCost.power / divisor,
   };
 }
+
+export const charmSteps = (() => {
+  const steps = [];
+  let stepId = 0;
+
+  for (let level = 1; level <= 10; level++) {
+    for (let part = 1; part <= 3; part++) {
+      steps.push({
+        id: stepId++,
+        label: `Lv ${level} - Part ${part}`,
+      });
+    }
+    steps.push({
+      id: stepId++,
+      label: `Lv ${level + 1}`,
+    });
+  }
+
+  for (let level = 11; level <= 15; level++) {
+    for (let part = 1; part <= 4; part++) {
+      steps.push({
+        id: stepId++,
+        label: `Lv ${level} - Part ${part}`,
+      });
+    }
+    steps.push({
+      id: stepId++,
+      label: `Lv ${level + 1}`,
+    });
+  }
+
+  for (let part = 1; part <= 4; part++) {
+    steps.push({
+      id: stepId++,
+      label: `Lv 16 - Part ${part}`,
+    });
+  }
+  steps.push({
+    id: stepId++,
+    label: `Lv 17`,
+  });
+
+  return steps;
+})();
