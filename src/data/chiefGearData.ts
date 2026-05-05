@@ -47,7 +47,21 @@ export const chiefGearDatabase: ChiefGear[] = [
   { id: 'red_2', tier: 'Red (Legendary)', tierColor: 'red', stars: 2, materials: { designPlan: 95, hardenedAlloy: 54000, polishingSolution: 590, lunarAmber: 10 }, bonus: '+97.75%', powerTotal: 2346000 },
   { id: 'red_3', tier: 'Red (Legendary)', tierColor: 'red', stars: 3, materials: { designPlan: 100, hardenedAlloy: 56000, polishingSolution: 620, lunarAmber: 10 }, bonus: '+102.00%', powerTotal: 2448000 },
   
+  // Red (Legendary) T1
+  { id: 'red_t1_0', tier: 'Red (Legendary) T1', tierColor: 'red', stars: 0, materials: { designPlan: 110, hardenedAlloy: 59000, polishingSolution: 670, lunarAmber: 15 }, bonus: '+106.25%', powerTotal: 2550000 },
+  { id: 'red_t1_1', tier: 'Red (Legendary) T1', tierColor: 'red', stars: 1, materials: { designPlan: 115, hardenedAlloy: 61000, polishingSolution: 700, lunarAmber: 15 }, bonus: '+110.50%', powerTotal: 2652000 },
+  { id: 'red_t1_2', tier: 'Red (Legendary) T1', tierColor: 'red', stars: 2, materials: { designPlan: 120, hardenedAlloy: 63000, polishingSolution: 730, lunarAmber: 15 }, bonus: '+114.75%', powerTotal: 2754000 },
+  { id: 'red_t1_3', tier: 'Red (Legendary) T1', tierColor: 'red', stars: 3, materials: { designPlan: 125, hardenedAlloy: 65000, polishingSolution: 760, lunarAmber: 15 }, bonus: '+119.00%', powerTotal: 2856000 },
+  
+  // Red (Legendary) T2
+  { id: 'red_t2_0', tier: 'Red (Legendary) T2', tierColor: 'red', stars: 0, materials: { designPlan: 135, hardenedAlloy: 68000, polishingSolution: 810, lunarAmber: 20 }, bonus: '+123.25%', powerTotal: 2958000 },
+  { id: 'red_t2_1', tier: 'Red (Legendary) T2', tierColor: 'red', stars: 1, materials: { designPlan: 140, hardenedAlloy: 70000, polishingSolution: 840, lunarAmber: 20 }, bonus: '+127.50%', powerTotal: 3060000 },
+  { id: 'red_t2_2', tier: 'Red (Legendary) T2', tierColor: 'red', stars: 2, materials: { designPlan: 145, hardenedAlloy: 72000, polishingSolution: 870, lunarAmber: 20 }, bonus: '+131.75%', powerTotal: 3162000 },
+  { id: 'red_t2_3', tier: 'Red (Legendary) T2', tierColor: 'red', stars: 3, materials: { designPlan: 150, hardenedAlloy: 74000, polishingSolution: 900, lunarAmber: 20 }, bonus: '+136.00%', powerTotal: 3264000 },
+  
   // Red (Legendary) T3
+  { id: 'red_t3_0', tier: 'Red (Legendary) T3', tierColor: 'red', stars: 0, materials: { designPlan: 160, hardenedAlloy: 77000, polishingSolution: 950, lunarAmber: 25 }, bonus: '+140.25%', powerTotal: 3366000 },
+  { id: 'red_t3_1', tier: 'Red (Legendary) T3', tierColor: 'red', stars: 1, materials: { designPlan: 165, hardenedAlloy: 80000, polishingSolution: 990, lunarAmber: 25 }, bonus: '+144.50%', powerTotal: 3468000 },
   { id: 'red_t3_2', tier: 'Red (Legendary) T3', tierColor: 'red', stars: 2, materials: { designPlan: 170, hardenedAlloy: 83000, polishingSolution: 1030, lunarAmber: 25 }, bonus: '+148.75%', powerTotal: 3570000 },
   { id: 'red_t3_3', tier: 'Red (Legendary) T3', tierColor: 'red', stars: 3, materials: { designPlan: 180, hardenedAlloy: 86000, polishingSolution: 1070, lunarAmber: 25 }, bonus: '+153.00%', powerTotal: 3672000 },
   
