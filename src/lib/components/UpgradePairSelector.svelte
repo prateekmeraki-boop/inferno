@@ -6,9 +6,16 @@
 
   const dispatch = createEventDispatcher();
 
-  let fromGear: ChiefGear | null = null;
-  let toGear: ChiefGear | null = null;
+  // Store IDs instead of objects
+  let fromGearId: string | null = null;
+  let toGearId: string | null = null;
   let quantity: number = 1;
+
+  // Derive the actual gear objects from IDs
+  $: fromGear = fromGearId
+    ? gears.find((g) => g.id === fromGearId) || null
+    : null;
+  $: toGear = toGearId ? gears.find((g) => g.id === toGearId) || null : null;
 
   function getGearDisplayName(gear: ChiefGear): string {
     const stars = "⭐".repeat(gear.stars);
@@ -31,8 +38,8 @@
         quantity,
       });
       // Reset
-      fromGear = null;
-      toGear = null;
+      fromGearId = null;
+      toGearId = null;
       quantity = 1;
     }
   }
@@ -44,44 +51,34 @@
   </h2>
 
   <div class="space-y-6">
-    <!-- Current Level -->
-    <div>
-      <label
-        for="current-level"
-        class="block text-white text-sm font-medium mb-2">Current Level</label
-      >
-      <select
-        id="current-level"
-        bind:value={fromGear}
-        class="w-full px-4 py-3 bg-slate-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-      >
-        <option value={null}>Select current gear...</option>
-        {#each gears as gear}
-          <option value={gear}>{getGearDisplayName(gear)} - {gear.bonus}</option
-          >
-        {/each}
-      </select>
-    </div>
+    <!-- Current Level select -->
+    <select
+      id="current-level"
+      bind:value={fromGearId}
+      class="w-full px-4 py-3 bg-slate-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+    >
+      <option value={null}>Select current gear...</option>
+      {#each gears as gear}
+        <option value={gear.id}
+          >{getGearDisplayName(gear)} - {gear.bonus}</option
+        >
+      {/each}
+    </select>
 
-    <!-- Target Level -->
-    <div>
-      <label
-        for="target-level"
-        class="block text-white text-sm font-medium mb-2">Target Level</label
-      >
-      <select
-        id="target-level"
-        bind:value={toGear}
-        disabled={!fromGear}
-        class="w-full px-4 py-3 bg-slate-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        <option value={null}>Select target gear...</option>
-        {#each validToGears as gear}
-          <option value={gear}>{getGearDisplayName(gear)} - {gear.bonus}</option
-          >
-        {/each}
-      </select>
-    </div>
+    <!-- Target Level select -->
+    <select
+      id="target-level"
+      bind:value={toGearId}
+      disabled={!fromGear}
+      class="w-full px-4 py-3 bg-slate-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <option value={null}>Select target gear...</option>
+      {#each validToGears as gear}
+        <option value={gear.id}
+          >{getGearDisplayName(gear)} - {gear.bonus}</option
+        >
+      {/each}
+    </select>
 
     <!-- Quantity -->
     <div>

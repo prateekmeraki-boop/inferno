@@ -26,7 +26,7 @@
     totalTroops > 0 ? (marksmanTotal / totalTroops) * 100 : 0;
 
   // Calculate deployment for Crazy Joe
-  // Priority: Infantry (max) > Lancers (fill remaining) > Marksmen (0)
+  // Strategy: Infantry (Total / 6) > Lancers (fill remaining) > Marksmen (0)
   let actualInfantryDeploy: number;
   let actualLancerDeploy: number;
   let actualMarksmanDeploy: number;
@@ -35,18 +35,9 @@
     // NO MARKSMEN for Crazy Joe
     actualMarksmanDeploy = 0;
 
-    // Calculate how much infantry we can send (based on available infantry)
-    const infantryPercentOfDeployment =
-      (infantryTotal / (infantryTotal + lancerTotal)) * 100;
-    const infantryByPercent = Math.floor(
-      (infantryPercentOfDeployment / 100) * deploymentCapacity,
-    );
-
-    // Maximize Infantry (limited by available troops)
-    const maxInfantryCanSend = Math.floor(infantryTotal);
+    // Send exactly 1/6th of total infantry
     actualInfantryDeploy = Math.min(
-      infantryByPercent,
-      maxInfantryCanSend,
+      Math.floor(infantryTotal / 6),
       deploymentCapacity,
     );
 
@@ -73,14 +64,14 @@
 
   // Recommended heroes for Crazy Joe
   const crazyJoeHeroes = [
-    "Ahmose",
-    "Patrick",
-    "Bahiti",
-    "Sergey",
-    "Ling Xue",
-    "Lumak Bokan",
-    "Zinman",
-    "Xura",
+    "Blanchette",
+    "Bradley",
+    "Magnus",
+    "Reina",
+    "Jessie",
+    "Jasser",
+    "Seo-Yoon",
+    "Sonya",
   ];
 
   function formatNumber(num: number): string {
@@ -202,7 +193,7 @@
             ❌ Send <strong>ZERO Marksmen</strong> (not used in Crazy Joe)
           </li>
           <li>
-            ✅ Maximize <strong>Infantry</strong> (highest priority for defense)
+            ✅ Send <strong>1/6th of your Infantry</strong>
           </li>
           <li>✅ Fill remaining with <strong>Lancers</strong></li>
         </ul>
@@ -261,8 +252,8 @@
 
       <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4 mb-4">
         <p class="text-blue-200 text-sm">
-          <strong>Strategy:</strong> Maximize Infantry (best for Crazy Joe) → Fill
-          with Lancers → NO Marksmen
+          <strong>Strategy:</strong> Send 1/6th of Infantry → Fill with Lancers →
+          NO Marksmen
         </p>
       </div>
 
@@ -318,11 +309,50 @@
       </div>
     </div>
 
+    <!-- HQ Strategy Section -->
+    <div class="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 mb-6">
+      <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+        <span>🏰</span> HQ Strategy
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div class="bg-slate-900/50 rounded-lg p-5 border-l-4 border-blue-500">
+          <h3 class="text-lg font-bold text-white mb-2">Wave 10</h3>
+          <p class="text-sm text-gray-300">
+            Send <strong class="text-blue-400">Only Infantry</strong> troops with
+            your Best Heroes.
+          </p>
+        </div>
+        <div
+          class="bg-slate-900/50 rounded-lg p-5 border-l-4 border-purple-500"
+        >
+          <h3 class="text-lg font-bold text-white mb-2">
+            Wave 20 &amp; Higher
+          </h3>
+          <p class="text-sm text-gray-300">
+            Use a <strong class="text-purple-400"
+              >mix of Lancers and Marksman</strong
+            >. 100% Marksman can be used for higher levels of CJ.
+          </p>
+        </div>
+      </div>
+      <div class="bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-4">
+        <p class="text-yellow-200 text-sm flex items-center gap-2">
+          <span class="text-xl">💡</span>
+          <span
+            ><strong>Hero Assignment:</strong> Attack Boosting Heroes should be kept
+            in the lead in both cases.</span
+          >
+        </p>
+      </div>
+    </div>
+
     <!-- Recommended Heroes Section -->
     <div class="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6">
-      <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+      <h2 class="text-2xl font-bold text-white mb-2 flex items-center gap-2">
         <span>👥</span> Recommended Heroes for Crazy Joe
       </h2>
+      <p class="text-gray-400 text-sm mb-6">Note: Use Bear Hunt Heroes</p>
 
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
         {#each crazyJoeHeroes as hero}

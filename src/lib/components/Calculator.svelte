@@ -70,6 +70,40 @@
   }, 0);
 
   $: totalPowerIncrease = totalToPower - totalFromPower;
+
+  $: {
+    console.log("Calculating materials for", upgradePairs.length, "pairs");
+    upgradePairs.forEach((pair, index) => {
+      console.log(`Pair ${index}:`, {
+        fromId: pair.from.id,
+        toId: pair.to.id,
+        quantity: pair.quantity,
+      });
+      const materials = calculateUpgradeMaterials(pair.from, pair.to);
+      console.log(`Pair ${index} materials:`, materials);
+    });
+  }
+
+  $: totalMaterials = upgradePairs.reduce(
+    (acc, pair) => {
+      const pairMaterials = calculateUpgradeMaterials(pair.from, pair.to);
+      console.log(
+        "Adding materials:",
+        pairMaterials,
+        "for pair:",
+        pair.from.id,
+        "->",
+        pair.to.id,
+      );
+      for (const [material, quantity] of Object.entries(pairMaterials)) {
+        acc[material] = (acc[material] || 0) + quantity * pair.quantity;
+      }
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
+
+  $: console.log("Total materials:", totalMaterials);
 </script>
 
 <div class="calculator-container grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
